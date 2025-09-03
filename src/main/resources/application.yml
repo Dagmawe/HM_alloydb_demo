@@ -1,0 +1,49 @@
+spring:
+  application:
+    name: gaphql-demo
+  graphql:
+    graphiql:
+      enabled: true
+
+  # --- PRIMARY DATASOURCE: Cloud SQL PostgreSQL --- Connecting through CloudSQL auth proxy
+  cloud:
+    gcp:
+      sql:
+        instance-connection-name: dlegesse-test:us-central1:edp-test-db
+        database-name: postgres
+      project-id: dlegesse-test
+
+  datasource: # These apply to the primary (Cloud SQL) auto-configured DataSource
+    username: postgres
+    password: adc
+    maximumPoolSize: 10
+    minimumIdle: 2
+    connectionTimeout: 30000
+
+  # --- SECONDARY DATASOURCE: AlloyDB PostgreSQL ---
+  alloydb-secondary-datasource:
+    #url: jdbc:postgresql://google/postgres
+    url: jdbc:postgresql://34.86.200.117:5432/postgres
+    username: postgres
+    password: adc
+    driver-class-name: org.postgresql.Driver
+#
+#    properties:
+#      socketFactory: com.google.cloud.alloydb.SocketFactory
+#      alloydbInstanceName: projects/dlegesse-test/locations/us-east4/clusters/alloydb-test-connectivity/instances/alloydb-test-connectivity-primary
+##      ipType: PRIVATE
+
+
+    maximum-pool-size: 10
+    minimum-idle: 2
+    connection-timeout: 40000
+    idle-timeout: 600000
+    max-lifetime: 1800000
+
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true

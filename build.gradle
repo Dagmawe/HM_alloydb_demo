@@ -1,0 +1,67 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '3.4.5'
+	id 'io.spring.dependency-management' version '1.1.7'
+}
+
+group = 'com.dlegesse'
+version = '0.0.1-SNAPSHOT'
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(21)
+	}
+	sourceCompatibility = '21'
+	targetCompatibility = '21'
+
+}
+
+repositories {
+	mavenCentral()
+	mavenLocal()
+}
+
+// Add this block to import the Spring Cloud GCP BOM
+ext {
+	// IMPORTANT: Check for the latest stable version here
+	// as of June 2025, a common compatible version with Spring Boot 3.4.x
+	// would be in the 6.x range for Spring Framework on Google Cloud
+	// You can check: https://github.com/GoogleCloudPlatform/spring-cloud-gcp/releases
+	// or https://googlecloudplatform.github.io/spring-cloud-gcp/reference/html/index.html#compatibility-with-spring-project-versions
+	// Let's use a recent version (e.g., 6.2.1) that is compatible with Spring Boot 3.4.x
+	set('springCloudGcpVersion', '6.2.1') // <--- Update this to the latest compatible version
+	set('alloydbJdbcConnectorVersion', '1.2.3')
+}
+
+dependencyManagement {
+	imports {
+		mavenBom "com.google.cloud:spring-cloud-gcp-dependencies:${springCloudGcpVersion}"
+	}
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-graphql'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'org.springframework.graphql:spring-graphql-test'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+
+	implementation 'com.google.cloud:spring-cloud-gcp-starter-sql-postgresql'
+	implementation 'com.google.cloud:spring-cloud-gcp-starter-alloydb'
+	implementation group: 'com.google.cloud', name: 'alloydb-jdbc-connector', version: '1.2.4'
+	implementation group: 'org.postgresql', name: 'postgresql', version: '42.6.0'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+	testCompileOnly 'org.projectlombok:lombok'
+	testAnnotationProcessor 'org.projectlombok:lombok'
+
+
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
